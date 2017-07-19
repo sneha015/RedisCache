@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>testfile</title>
+</head>
+
+<body>
+
+<h1> Redis Cache Driver page
+</h1>
+<h2>__________________________________________________________________________________</h2>
+
+<button type="button" onclick=picture(1)>Image SJSU</button>
+<button type="button" onclick=picture(2)>Image CMPE Building</button>
+<button type="button" onclick=picture(3)>Image Dr.Martin Luther King Jr.Library</button>
+<br><br>
+<p id="fetchtext" > </p>
+<br><br>
+<img id="bigpic" src="" alt="" height="200" width="200"/>
+
+<script type="text/javascript">
+    
+    
+function picture(id){
+    var HttpClient = function() {
+        this.get = function(aUrl, aCallback) {
+            var anHttpRequest = new XMLHttpRequest();
+            anHttpRequest.onreadystatechange = function() {
+                if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
+                aCallback(anHttpRequest.responseText,anHttpRequest);
+            }
+            
+            anHttpRequest.open( "GET", aUrl, true );
+            anHttpRequest.send( null );
+        }
+    }
+
+    var client = new HttpClient();
+    client.get('http://localhost:8080/getImage?ID='+id, function(response,anHttpRequest) {
+               //var b64Response = btoa(unescape(response));
+               
+               
+               // create an image
+               //var outputImg = document.createElement('img');
+               console.log(anHttpRequest.getResponseHeader("fetch"));
+               var pic = 'data:image/png;base64,'+response;
+               document.getElementById('bigpic').src = pic;
+               document.getElementById('fetchtext').innerHTML=anHttpRequest.getResponseHeader("fetch");
+               //pic.replace('90x90', '225x225');
+    });
+    
+    
+    //var pic = "http://img.tesco.com/Groceries/pi/118/5000175411118/IDShot_90x90.jpg"
+    //document.getElementById('bigpic').src = pic.replace('90x90', '225x225');
+}
+
+</script>
+
+</body>
+</html>
